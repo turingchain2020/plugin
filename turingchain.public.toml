@@ -1,0 +1,341 @@
+# 名称，平行链 Title 以"user.p."前缀开头
+Title="TuringChain"
+# 是否是测试网络
+TestNet=false
+# 是否开启自动修复时间
+FixTime=false
+# 版本
+version="6.3.0"
+CoinSymbol="TRC"
+chainID=87
+
+[log]
+# 日志级别，支持debug(dbug)/info/warn/error(eror)/crit
+loglevel="info"
+# 共识日志级别
+logConsoleLevel="info"
+# 日志文件名，可带目录，所有生成的日志文件都放到此目录下
+logFile="logs/turingchain.log"
+# 单个日志文件的最大值（单位：兆）
+maxFileSize=300
+# 最多保存的历史日志文件个数
+maxBackups=100
+# 最多保存的历史日志消息（单位：天）
+maxAge=28
+# 日志文件名是否使用本地事件（否则使用UTC时间）
+localTime=true
+# 历史日志文件是否压缩（压缩格式为gz）
+compress=true
+# 是否打印调用源文件和行号
+callerFile=false
+# 是否打印调用方法
+callerFunction=false
+
+
+[blockchain]
+# 缓存区块的个数
+defCacheSize=128
+# 同步区块时一次最多申请获取的区块个数
+maxFetchBlockNum=128
+# 向对端节点请求同步区块的时间间隔
+timeoutSeconds=5
+# 使用的数据库类型
+driver="leveldb"
+# 数据库文件目录
+dbPath="datadir"
+# 数据库缓存大小
+dbCache=64
+# 是否为单节点
+singleMode=false
+# 同步区块批量写数据库时，是否需要立即写磁盘，非固态硬盘的电脑可以设置为false，以提高性能
+batchsync=false
+# 是否记录添加或者删除区块的序列，若节点作为主链节点，为平行链节点提供服务，需要设置为true
+isRecordBlockSequence=true
+# 是否为平行链节点
+isParaChain=false
+# 是否开启交易快速查询索引
+enableTxQuickIndex=true
+# 是否开启精简localdb
+enableReExecLocal=true
+# 使能精简localdb
+enableReduceLocaldb=true
+# 使能注册推送区块、区块头或交易回执
+enablePushSubscribe=false
+# 关闭分片存储,默认false为开启分片存储,如果是初次启动分片，建议关闭分片功能，运行一段时间之后再开启;平行链不需要分片需要修改此默认参数为true
+disableShard=true
+# 分片存储中每个大块包含的区块数
+chunkblockNum=1000
+# 使能从P2pStore中获取数据
+enableFetchP2pstore=false
+# 使能假设已删除已归档数据后,获取数据情况
+enableIfDelLocalChunk=false
+
+
+[p2p]
+# p2p类型
+types=["gossip"]
+# 是否启动P2P服务
+enable=true
+# 使用的数据库类型
+driver="leveldb"
+# 使用的数据库类型
+dbPath="datadir/addrbook"
+# 数据库缓存大小
+dbCache=4
+# GRPC请求日志文件
+grpcLogFile="grpc33.log"
+# waitPid 等待seed导入
+waitPid=false
+
+[p2p.sub.gossip]
+# 种子节点，格式为 ip:port，多个节点以逗号分隔，如 seeds=["10.0.0.1:13802","10.0.0.2:13802","10.0.0.3:13802"]
+seeds=["39.105.112.116:9675","101.200.37.68:9675"]
+# 是否是种子节点
+isSeed=false
+# 服务是否开启
+serverStart=true
+# 是否链接内置节点
+innerSeedEnable=true
+# 限制接入链接节点的数量
+innerBounds=300
+
+#通道，设置非0值即可
+channel=9675
+port=9675
+
+[rpc]
+# jrpc 绑定地址
+jrpcBindAddr=":9671"
+# grpc 绑定地址
+grpcBindAddr=":9672"
+# 白名单列表，允许访问的 IP 地址，默认是“*”，允许所有 IP 访问
+whitelist=["*"]
+# jrpc 方法请求白名单，默认是“*”，允许访问所有 RPC 方法
+jrpcFuncWhitelist=["*"]
+jrpcFuncBlacklist=["*"]
+# grpc 方法请求白名单，默认是“*”，允许访问所有 RPC 方法
+grpcFuncWhitelist=["*"]
+grpcFuncBlacklist=["*"]
+
+[mempool]
+# mempool队列名称，可配，timeline，score，price
+name="price"
+# mempool缓存容量大小，默认10240
+poolCacheSize=10240
+# 每个账户在mempool中得最大交易数量，默认100
+maxTxNumPerAccount=100
+# 最小得交易手续费率，这个没有默认值，必填，一般是0.001 coins
+minTxFeeRate=100000
+# 最大的交易手续费率, 0.1 coins
+maxTxFeeRate=10000000
+# 单笔交易最大的手续费, 10 coins
+maxTxFee=1000000000
+# 是否开启阶梯手续费
+isLevelFee=true
+
+[mempool.sub.timeline]
+# mempool缓存容量大小，默认10240
+poolCacheSize=10240
+
+[mempool.sub.score]
+# mempool缓存容量大小，默认10240
+poolCacheSize=10240
+# 时间占价格比例
+timeParam=1
+# 手续费相对于时间的一个的常量,排队时手续费高1e3的分数~=快1h的分数
+priceConstant=10
+# 常量比例
+pricePower=1
+
+[mempool.sub.price]
+# mempool缓存容量大小，默认10240
+poolCacheSize=10240
+
+
+[consensus]
+# 共识名,可选项有 solo,ticket,raft,tendermint,para
+name="ticket"
+# 是否开启挖矿,开启挖矿才能创建区块
+minerstart=true
+# 创世区块时间(UTC时间)
+genesisBlockTime=1623945600
+# 创世交易地址
+genesis="14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
+# 配置挖矿的合约名单
+minerExecs=["ticket"]
+# 最优区块选择
+enableBestBlockCmp=true
+
+[mver.consensus]
+# 基金账户地址
+fundKeyAddr="1AzP8dU58SeUSpyAVkfVz9rsdwp3HyFTBA"
+# 挖矿难度
+powLimitBits="0x1f00ffff"
+# 区块包含最多交易数
+maxTxNumber=1500
+
+[mver.consensus.ticket]
+# 用户回报
+coinReward=5
+# 发展基金回报
+coinDevFund=1
+# ticketPrice 价格. 
+ticketPrice=1000
+# 每次调整难度的最大的范围，如果设置成 4 的话，范围是 (1/4 - 4)，一次不能增加 4倍以上的难度，或者难度减少为 原来的 1/4 ，这个参数，是为了难度不会突然爆增加或者减少
+retargetAdjustmentFactor=4
+# 表示如果区块时间大于当前时间 15s ，那么区块就会判定为无效区块。
+futureBlockTime=15
+# ticket冻结时长. 挖完矿，经过此时长后，才会把票对应的代币转到coins下。
+ticketFrozenTime=30
+# ticket取回时长. 如果票没有被使用，而且被取回。 经过此时长后，票才会从ticket下转到coins下。
+ticketWithdrawTime=30
+# ticket挖矿等待时长. 买完票后，经过此时长后，才能用票进行挖矿
+ticketMinerWaitTime=30
+# 调整挖矿难度的间隔，(ps:难度不是每个区块都调整的，而是每隔 targetTimespan / targetTimePerBlock 块调整一次)
+targetTimespan=720
+# 每个区块打包的目标时间
+targetTimePerBlock=5
+
+# 创世块的配置
+[consensus.sub.ticket]
+# 创世区块时间(UTC时间)
+genesisBlockTime=1622476800
+
+[[consensus.sub.ticket.genesis]]
+# 在线挖矿地址，用于支付挖矿交易费
+minerAddr="1Hqy3Ynu4HddwRKwzLtowGcg7rEMhBs4Yn"
+# 离线地址，ticket的持有人，
+returnAddr="1BpGAdnHrCHbq3nRc9TnSnvGfUHuRcqFfN"
+# 创世票的数量，所有的创世票的数量总和不低于7万张，否则会影响48小时之后的出块速度。
+count=90000
+
+[[consensus.sub.ticket.genesis]]
+# 在线挖矿地址，用于支付挖矿交易费
+minerAddr="1Ge7pdrzvjdL4ZyAK1EkWugRrPivRzaBcw"
+# 离线地址，ticket的持有人，
+returnAddr="1NDDrasE21VrKwZanrDyKqDNrZ8jrHmjSS"
+# 创世票的数量，所有的创世票的数量总和不低于7万张，否则会影响48小时之后的出块速度。
+count=90000
+
+[store]
+# 数据存储格式名称，目前支持 mavl,kvdb,kvmvcc,mpt
+name="kvmvccmavl"
+# 数据存储驱动类别，目前支持 leveldb,goleveldb,memdb,gobadgerdb,ssdb,pegasus
+driver="leveldb"
+# 数据文件存储路径
+dbPath="datadir/mavltree"
+# Cache大小
+dbCache=128
+# store数据库版本
+storedbVersion="2.0.0"
+
+[store.sub.mavl]
+# 是否使能 mavl 加前缀
+enableMavlPrefix=false
+# 是否使能 MVCC,如果 mavl 中 enableMVCC 为 true 此处必须为 true
+enableMVCC=false
+# 是否使能 mavl数据裁剪
+enableMavlPrune=false
+# 裁剪高度间隔
+pruneHeight=10000
+# 是否使能 mavl 数据载入内存
+enableMemTree=true
+# 是否使能 mavl 叶子节点数据载入内存
+enableMemVal=true
+# 缓存 close ticket 数目，该缓存越大同步速度越快，最大设置到 1500000
+tkCloseCacheLen=100000
+
+[store.sub.kvmvccmavl]
+# 是否使能 MVCC
+enableMVCCIter=true
+# 是否使能mavl加前缀
+enableMavlPrefix=false
+# 是否使能 MVCC,如果 mavl 中 enableMVCC 为 true 此处必须为 true
+enableMVCC=false
+# 是否使用 mavl 修剪
+enableMavlPrune=false
+# 修剪 mavl 的高度
+pruneMavlHeight=10000
+# 是否使用 MVCC 修剪
+enableMVCCPrune=false
+# 修剪 MVCC 的高度
+pruneMVCCHeight=10000
+# 是否使能 mavl 数据载入内存
+enableMemTree=true
+# 是否使能 mavl 叶子节点数据载入内存
+enableMemVal=true
+# 缓存 close ticket 数目，该缓存越大同步速度越快，最大设置到 1500000
+tkCloseCacheLen=100000
+# 该参数针对平行链，主链无需开启此功能
+enableEmptyBlockHandle=false
+
+[wallet]
+# 交易发送最低手续费，单位0.00000001BTY(1e-8),默认100000，即0.001
+minFee=100000
+# walletdb驱动名，支持leveldb/memdb/gobadgerdb/ssdb/pegasus
+driver="leveldb"
+# walletdb路径
+dbPath="wallet"
+# walletdb缓存大小
+dbCache=16
+# 钱包发送交易签名方式
+signType="secp256k1"
+
+[wallet.sub.ticket]
+# 是否关闭ticket自动挖矿，默认false
+minerdisable=false
+# 允许购买ticket挖矿的白名单地址，默认配置“*”，允许所有地址购买
+minerwhitelist=["*"]
+
+
+[exec]
+# 是否开启stat插件
+enableStat=false
+# 是否开启MVCC插件
+enableMVCC=false
+# 别名
+alias=["token1:token","token2:token","token3:token"]
+
+[exec.sub.token]
+# 是否保存token交易信息
+saveTokenTxList=true
+# token审批人地址
+tokenApprs = [
+	"1HKjax8uw4Up1fK4GKjU1MRKV1uznHgi3T",
+	"1M8q4oQrscpRnJDiPVA12aisWWzAK6oMXU"
+]
+
+[exec.sub.cert]
+# 是否启用证书验证和签名
+enable=false
+# 加密文件路径
+cryptoPath="authdir/crypto"
+# 带证书签名类型，支持"auth_ecdsa", "auth_sm2"
+signType="auth_ecdsa"
+
+[exec.sub.manage]
+# manage 执行器超级管理员地址
+superManager=[
+    "189EtFRAGEGQpAsAXpVnD1RVgd39MjNT6y",
+    "18EWT31Ms27etCKWRUC3ttvsUtn714om4a"
+]
+
+[metrics]
+# 是否使能发送 metrics 数据的发送，目前没怎么使用，不用关注
+enableMetrics=false
+# 数据保存模式
+dataEmitMode="influxdb"
+
+[metrics.sub.influxdb]
+# 以纳秒为单位的发送间隔
+duration=1000000000
+# 接收采样数据的地址
+url="http://influxdb:8086"
+# 数据库名称
+database="turingchainmetrics"
+# 数据库用户名
+username=""
+# 数据库密码
+password=""
+# 域名
+namespace=""
